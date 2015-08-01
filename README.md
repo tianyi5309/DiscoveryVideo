@@ -16,7 +16,7 @@ To get uri:
 
 1. Right click, inspect element
 2. Go to Resources
-3. Go to others (or Frames/(viewer.aspx)/others
+3. Go to others (or Frames/(viewer.aspx)/others for Chrome)
 4. Open (double-click) video resource (.ts etc.) - don't save if prompted
 5. Copy url
 
