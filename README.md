@@ -36,3 +36,7 @@ Optional
 Offset is the last 5 digits of file (excluding extension)
 
 A 50 minute video should have 300 chunks, so an offset of 150 is around halfway through the videos
+
+##TODO:
+- Support different filetypes (what are there?)
+- Thread the calls for faster download
