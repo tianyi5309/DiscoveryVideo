@@ -7,6 +7,10 @@ Only works on OSX / Linux. (Tested on OSX only)
 - Ruby (ver 2.2.1)
 - ffmpeg (ver 2.7.1)
 
+Please set open files limit to 4096 or larger
+
+`ulimit -n 4096`
+
 ##Usage:
 `ruby discovery_video.rb uri [file_name] [offset]`
 ####uri

@@ -7,14 +7,12 @@ class DiscoveryVideo
       init = 0
     end
     if file_name.nil?
-      file_name = "output.ts"
+      file_name = "output"
     end
     
     @uri = uri
     @n_init = init.to_i
-    @n = @n_init
     @file_name = file_name + ".ts"
-    @input = ""
   end
   
   def mkdir
@@ -32,70 +30,91 @@ class DiscoveryVideo
     `curl -OsS #{cur_uri}`
   end
   
-  def terminate (name)
-    size = File.size(name)
-    puts "#{@n}\t#{size}"
-    if size < 50000
-      puts "All downloaded, combining..."
-      return true
+  def download (interval = 1)
+    n = @n_init
+    cont = true
+    while cont
+      print "\r#{n}"
+      threads = []
+      (0..interval-1).each do |i|
+        threads << Thread.new do
+          get(get_name(n+i))
+        end
+      end
+      
+      threads.each do |t|
+        t.join
+      end
+      
+      del = false
+      (0..interval-1).each do |i|
+        if cont && terminate(get_name(n+i)) # First instance of termination stops while loop and triggers deletion of further files
+          puts "\nAll downloaded. Combining..."
+          cont = false
+          del = true
+          @n_fin = n + i - 1
+        end
+        if del
+          File.delete(get_name(n+i))
+        end
+      end
+      
+      n += interval
     end
-    false
   end
   
-  def update_input
-    name = get_name(@n)
-    if @n == @n_init
-      @input << name
+  def terminate (name)
+    size = File.size(name)
+    if size < 50000
+      return true
     else
-      @input << "|" << name
+      return false
     end
+  end
+  
+  def gen_input
+    input = get_name(@n_init)
+    (@n_init+1..@n_fin).each do |n|
+      input << '|' << get_name(n)
+    end
+    input
   end
   
   def gen_vid
-    `ffmpeg -i "concat:#{@input}" -c copy #{@file_name}`
+    `ffmpeg -loglevel 16 -i "concat:#{gen_input}" -c copy #{@file_name}`
   end
   
   def cleanup
     puts "Cleaning up..."
-    (@n_init..@n).each do |n|
+    (@n_init..@n_fin).each do |n|
       name = get_name(n)
       File.delete(name)
     end
   end
   
   def run
+    start = Time.now
     mkdir
     puts "Downloading videos..."
-    puts "No.\tSize"
-    
-    while true
-      name = get_name(@n)
-      get(name)
-      if terminate(name)
-        puts "All downloaded, combining..."
-        break
-      else
-        update_input
-        @n += 1
-      end
-    end
+    download
     gen_vid
     cleanup
-    puts "All done, check output at #{@file_name}"
+    fin = Time.now
+    puts "All done in #{fin-start}s, check output at #{@file_name}"
   end
 end
 
 c = DiscoveryVideo.new(ARGV[0], ARGV[1], ARGV[2])
 c.run
 
-# Code pre-refactoring
+## Code pre-refactoring
 ## Make directory for video
 #dir_name = "DiscoveryVideo-" + Time.now.to_i.to_s
 #Dir.mkdir(dir_name)
 #Dir.chdir(dir_name)
 #
-#uri = "http://ri.evvoclass.com/Panopto/Content/Sessions4/abddcf8a-c5ca-4483-b1f1-613c13b53580/25c05560-a8d0-4523-ad37-cc0590fd954e-f1132954-6a37-4c32-98e9-d3d3815baee7.hls/436279/"
-#n_init = 350
+#uri = "http://ri.evvoclass.com/Panopto/Content/sessions3/10bd5186-260b-44b4-ac2f-142083941b45/71fa48a2-ace9-4b80-9a04-1a9ecf8f897a-0e79fd4d-c7ef-4a68-b6ef-f65ec9a95b66.hls/666683/"
+#n_init = 50
 #n = n_init # Video number
 #input = ""  # Passed to ffmpeg
 #puts "No.\tSize"
