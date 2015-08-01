@@ -1,15 +1,19 @@
 class DiscoveryVideo
-  def initialize (uri, init=0)
+  def initialize (uri, file_name, init)
     if uri.nil?
       abort("uri required")
     end
     if init.nil?
       init = 0
     end
+    if file_name.nil?
+      file_name = "output.ts"
+    end
     
     @uri = uri
     @n_init = init.to_i
     @n = @n_init
+    @file_name = file_name + ".ts"
     @input = ""
   end
   
@@ -48,7 +52,7 @@ class DiscoveryVideo
   end
   
   def gen_vid
-    `ffmpeg -i "concat:#{@input}" -c copy output.ts`
+    `ffmpeg -i "concat:#{@input}" -c copy #{@file_name}`
   end
   
   def cleanup
@@ -77,10 +81,11 @@ class DiscoveryVideo
     end
     gen_vid
     cleanup
+    puts "All done, check output at #{@file_name}"
   end
 end
 
-c = DiscoveryVideo.new(ARGV[0], ARGV[1])
+c = DiscoveryVideo.new(ARGV[0], ARGV[1], ARGV[2])
 c.run
 
 # Code pre-refactoring
