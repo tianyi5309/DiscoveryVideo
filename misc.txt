@@ -1,11 +1,33 @@
+Aborted due to M1's internet throttling
 Threading Performance
 
 Interval 1
+69.091606
 
+Average: 
+
+Interval 2
+60.868898
+
+Average:
+
+Interval 5
+55.596742
+Average: 
 
 Interval 10
+49.811179
 
+Average: 
+
+Interval 20
+
+Average: 
 
 Interval 50
 
+Average:
+
 Interval 100
+
+Average:

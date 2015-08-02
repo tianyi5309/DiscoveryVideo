@@ -7,7 +7,7 @@ Only works on OSX / Linux. (Tested on OSX only)
 - Ruby (ver 2.2.1)
 - ffmpeg (ver 2.7.1)
 
-Please set open files limit to 4096 or larger
+Please set open files limit to 4096 or higher
 
 `ulimit -n 4096`
 
@@ -43,4 +43,4 @@ A 50 minute video should have 300 chunks, so an offset of 150 is around halfway 
 
 ##TODO:
 - Support different filetypes (what are there?)
-- Thread the calls for faster download
+- Thread the calls for faster download (DONE!)

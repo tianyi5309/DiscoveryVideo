@@ -30,7 +30,7 @@ class DiscoveryVideo
     `curl -OsS #{cur_uri}`
   end
   
-  def download (interval = 1)
+  def download (interval = 10)
     n = @n_init
     cont = true
     while cont
