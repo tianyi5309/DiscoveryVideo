@@ -31,9 +31,3 @@ Average:
 Interval 100
 
 Average:
-
-
-http://ri.evvoclass.com/Panopto/Content/Sessions2/07f23e61-46b5-4e1a-bb17-3eca122d0ac1/12512447-c9c7-481d-80e3-0a1cd6bed8da.screen.hls/160895/00000.ts
-http://ri.evvoclass.com/Panopto/Content/Sessions2/07f23e61-46b5-4e1a-bb17-3eca122d0ac1/d3e5b7af-168b-4d4a-accb-4d9c72906529-13a7531d-881c-4ea1-8919-3fc9bd201d06.hls/98904/00000.ts
-http://ri.evvoclass.com/Panopto/Content/Sessions2/07f23e61-46b5-4e1a-bb17-3eca122d0ac1/12512447-c9c7-481d-80e3-0a1cd6bed8da.screen.hls/160895/00000.ts
-http://ri.evvoclass.com/Panopto/Content/Sessions2/07f23e61-46b5-4e1a-bb17-3eca122d0ac1/d3e5b7af-168b-4d4a-accb-4d9c72906529-13a7531d-881c-4ea1-8919-3fc9bd201d06.hls/98904/00000.ts
