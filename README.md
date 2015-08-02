@@ -12,7 +12,7 @@ Please set open files limit to 4096 or higher
 `ulimit -n 4096`
 
 ##Usage:
-`ruby discovery_video.rb uri [file_name] [offset]`
+`ruby discovery_video.rb [uri] [, file_name] [, offset]`
 ####uri
 Compulsory
 
