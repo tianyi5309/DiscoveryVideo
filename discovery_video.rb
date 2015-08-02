@@ -81,7 +81,7 @@ class DiscoveryVideo
   end
   
   def gen_vid
-    `ffmpeg -loglevel 16 -i "concat:#{gen_input}" -c copy #{@file_name}`
+    `ffmpeg -loglevel 16 -i "concat:#{gen_input}" -c copy "#{@file_name}"`
   end
   
   def cleanup
@@ -113,7 +113,6 @@ c.run
 #Dir.mkdir(dir_name)
 #Dir.chdir(dir_name)
 #
-#uri = "http://ri.evvoclass.com/Panopto/Content/sessions3/10bd5186-260b-44b4-ac2f-142083941b45/71fa48a2-ace9-4b80-9a04-1a9ecf8f897a-0e79fd4d-c7ef-4a68-b6ef-f65ec9a95b66.hls/666683/"
 #n_init = 50
 #n = n_init # Video number
 #input = ""  # Passed to ffmpeg

@@ -44,3 +44,5 @@ A 50 minute video should have 300 chunks, so an offset of 150 is around halfway 
 ##TODO:
 - Support different filetypes (what are there?)
 - Thread the calls for faster download (DONE!)
+- Separate video and audio streams
+- Bug: different length of video captured - why?
