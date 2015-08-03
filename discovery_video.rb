@@ -1,18 +1,18 @@
+require 'optparse'
+require 'ostruct'
+
 class DiscoveryVideo
-  def initialize (uri, file_name, init)
-    if uri.nil?
-      abort("uri required")
-    end
-    if init.nil?
-      init = 0
-    end
-    if file_name.nil?
-      file_name = "output"
+  def initialize (options)
+    @both = options.both
+    if @both
+      @av = options.av
+    else
+      @a = options.a
+      @v = options.v
     end
     
-    @uri = uri
-    @n_init = init.to_i
-    @file_name = file_name + ".ts"
+    @n_init = options.init
+    @file_name = options.file_name
   end
   
   def mkdir
@@ -25,12 +25,13 @@ class DiscoveryVideo
     n.to_s.rjust(5, "0") + ".ts"
   end
   
-  def get (name)
-    cur_uri = @uri + name
-    `curl -OsS #{cur_uri}`
+  def get (uri, n, prefix = "")
+    name = get_name(n)
+    `curl -sS #{uri + name} -o #{prefix + name}`
   end
   
-  def download (interval = 10)
+  def download (uri, prefix = "", interval = 1)
+    puts "Downloading from #{uri}..."
     n = @n_init
     cont = true
     while cont
@@ -38,7 +39,7 @@ class DiscoveryVideo
       threads = []
       (0..interval-1).each do |i|
         threads << Thread.new do
-          get(get_name(n+i))
+          get(uri, n+i, prefix)
         end
       end
       
@@ -48,14 +49,13 @@ class DiscoveryVideo
       
       del = false
       (0..interval-1).each do |i|
-        if cont && terminate(get_name(n+i)) # First instance of termination stops while loop and triggers deletion of further files
-          puts "\nAll downloaded. Combining..."
+        if cont && terminate(prefix + get_name(n+i)) # First instance of termination stops while loop and triggers deletion of further files
           cont = false
           del = true
           @n_fin = n + i - 1
         end
         if del
-          File.delete(get_name(n+i))
+          File.delete(prefix + get_name(n+i))
         end
       end
       
@@ -67,21 +67,25 @@ class DiscoveryVideo
     size = File.size(name)
     if size < 50000
       return true
-    else
-      return false
     end
+    false
   end
   
   def gen_input
-    input = get_name(@n_init)
-    (@n_init+1..@n_fin).each do |n|
-      input << '|' << get_name(n)
+    input = ""
+    (@n_init..@n_fin).each do |n|
+      input << get_name(n) << " "
     end
     input
   end
   
   def gen_vid
-    `ffmpeg -loglevel 16 -i "concat:#{gen_input}" -c copy "#{@file_name}"`
+    `cat #{gen_input} > #{@file_name}.ts`
+  end
+  
+  def to_mp4
+    `ffmpeg -loglevel 16 -i #{@file_name}.ts -vcodec copy -acodec copy -bsf:a aac_adtstoasc #{@file_name}.mp4`
+    File.delete(@file_name + ".ts")
   end
   
   def cleanup
@@ -95,16 +99,39 @@ class DiscoveryVideo
   def run
     start = Time.now
     mkdir
-    puts "Downloading videos..."
-    download
+    download(@av)
+    puts "\nAll downloaded. Combining..."
     gen_vid
+    to_mp4
     cleanup
     fin = Time.now
-    puts "All done in #{fin-start}s, check output at #{@file_name}"
+    puts "All done in #{fin-start}s, check output at #{@file_name}.mp4"
   end
 end
 
-c = DiscoveryVideo.new(ARGV[0], ARGV[1], ARGV[2])
+options = OpenStruct.new(both: true, file_name: "output", init: 0)
+if ARGV[0] == "true"
+  options.av = ARGV[1]
+  if !ARGV[2].nil?
+    options.file_name = ARGV[2]
+  end
+  if !ARGV[3].nil?
+    options.init = ARGV[3].to_i
+  end
+else
+  options.both = false
+  options.a = ARGV[1]
+  options.v = ARGV[2]
+  if !ARGV[3].nil?
+    options.file_name = ARGV[3]
+  end
+  if !ARGV[4].nil?
+    options.init = ARGV[4].to_i
+  end
+end
+
+puts options
+c = DiscoveryVideo.new(options)
 c.run
 
 ## Code pre-refactoring
