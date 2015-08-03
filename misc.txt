@@ -1,5 +1,27 @@
-Aborted due to M1's internet throttling
+Separate video / audio syncing
+
+Planning Lecture 1 (10:07)
+Audio starts from 0 - ... 68  10:07:23
+Video starts from 1 - ... 68  Video 0 shows teacher opening up recording program (10:18:31 for 0-68)
+Video is delayed from audio by 2 seconds
+Audio - 8.80 seconds each, * 69 videos = 607.2
+Video - 9 seconds each, + 6.27 seconds for last one. 67*9 + 6.27 = 609.27
+
+Video delayed by 2 seconds = 607.27 seconds ~ Audio
+
+Specific mechanism?
+
+Planning Lecture 2 (15:13)
+Audio starts from 0 - ... 103 - 15:13
+Video starts from 1 - ... 103? (Total of 0-103 is 15:28)
+Video is delayed from audio by about 3-4 seconds
+Audio - 8.80 seconds each, + 6.85 seconds for last one. 103*8.8 + 6.85 = 913.25
+Video - 9 seconds each, + 1.25 seconds for last one. 102*9 + 1.25 = 919.25
+
+Theory: video delay is proportional to length of video (hence number of 0.2 second gaps)
+
 Threading Performance
+Aborted due to M1's internet throttling
 
 Interval 1
 69.091606
